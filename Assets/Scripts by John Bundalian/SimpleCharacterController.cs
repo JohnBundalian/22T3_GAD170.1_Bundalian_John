@@ -2,15 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace WriteYourNameHere
+namespace JohnBundalian
 {
     /// <summary>
     /// This class holds all the variables and functionality for moving our character around our game world.
     /// </summary>
     public class SimpleCharacterController : MonoBehaviour
     {
-        [SerializeField] private float horizontalInputValue; // The value of our horizontal input axis.
+        [Header("References")]
+        [SerializeField] private Rigidbody2D rbody2D;
+
+        [Header("Character Stats")]
+        [SerializeField] private float runSpeed = 3f;
+        [SerializeField] private float jumpStrength = 5f;
+        [SerializeField] private float horizontalInputValue = 2; // The value of our horizontal input axis.
         [SerializeField] private SpriteRenderer spriteRenderer; // Our character's sprite.
+
+        [Header("Player Input")]
+        private float xImput = 0f;
+        private bool isJumping = false;
 
         // TODO Movement 1/8: Declare a variable for a reference to our 2D rigidbody, for physics stuff.
 
