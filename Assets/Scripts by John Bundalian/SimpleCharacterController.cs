@@ -4,49 +4,116 @@ using UnityEngine;
 
 namespace JohnBundalian
 {
-    /// <summary>
-    /// This class holds all the variables and functionality for moving our character around our game world.
-    /// </summary>
     public class SimpleCharacterController : MonoBehaviour
     {
-        [Header("References")]
-        [SerializeField] private Rigidbody2D rbody2D;
+        private Rigidbody2D rbody2D;
+        private SpriteRenderer spriteRenderer;
+        private Animator animator;
+
+        private LayerMask groundLayerMask;
+        private float horizontalMovementValue = 0f;
+        private bool isGrounded = false;
+        private bool isJumpButtonHeld = false;
 
         [Header("Character Stats")]
         [SerializeField] private float runSpeed = 3f;
         [SerializeField] private float jumpStrength = 5f;
-        [SerializeField] private float horizontalInputValue = 2; // The value of our horizontal input axis.
-        [SerializeField] private SpriteRenderer spriteRenderer; // Our character's sprite.
 
-        [Header("Player Input")]
-        private float xImput = 0f;
-        private bool isJumping = false;
-
-        // TODO Movement 1/8: Declare a variable for a reference to our 2D rigidbody, for physics stuff.
-
-        // TODO Movement 2/8: Declare a variable for the speed we can run at in Unity-units-per-second.
-
-        // TODO Movement 3/8: Declare a variable for the strength of our jump.
-
-
-        private void Update()
+        private void Awake()
         {
-            // TODO Movement 4/8: Store our horizontal player input value so we can access it later on.
-
-            // TODO Movement 5/8: Transform our character's position on the X axis. (Reference our stored horizontal input value here!)
-
-            // TODO Movement 6/8: Check if the player presses the "Jump" button (by default, the space bar on the keyboard).
-
-            // TODO Movement 7/8: If they do, then add vertical velocity to our rigidbody to make our character "jump"!
-
-            // TODO Movement 8/8: Add this script to a game object and make a new prefab from it, and explore the level!
-
-            // TODO Movement Final: Add code comments describing what you hope your code is doing throughout this script.
-
-            // TODO Movement Bonus 1: Ensure that our character can only jump if they are "grounded". (Hint: You can use a boolean as a part of this!)
-
-            // TODO Movement Bonus 2: Flip our character's sprite so that it faces left/right if we are moving left/right. (Hint: A SpriteRenderer reference, and changing its FlipX = true/false will help!)
-
+            rbody2D = GetComponent<Rigidbody2D>();
         }
+
+        private void Start()
+        {
+            // Initialise Character.
+            Initialise();
+        }
+        
+            private void Update()
+        {
+            // Horizontal movement value to Playetr 
+            rbody2D.velocity = new Vector2(Input.GetAxis("Horizontal"), rbody2D.velocity.y);
+
+            if (Input.GetKey(KeyCode.Space))
+                rbody2D.velocity = new Vector2(rbody2D.velocity.x, runSpeed);
+
+                // Flip our sprite along a vertical 'mirror line' so that it 'faces' the correct direction.
+                // To the left.
+                if (horizontalMovementValue < 0f && spriteRenderer.flipX == true)
+                {
+                    spriteRenderer.flipX = false;
+                }
+                // To the right.
+                else if (horizontalMovementValue > 0f && spriteRenderer.flipX == false)
+                {
+                    spriteRenderer.flipX = true;
+                }
+
+                // Set our animator's Speed parameter so that Alan's run animation plays.
+                animator.SetFloat("Speed", Mathf.Abs(horizontalMovementValue));
+
+                // Transform this object's position on the X axis (horizontally)
+                // at a rate of "moveSpeed" units every second (by default, 3 units per second).
+                transform.position += Time.deltaTime * runSpeed * new Vector3(horizontalMovementValue, 0);
+
+                // If the player presses "Jump" (by default, the space bar on the keyboard)...
+                if (isGrounded && Input.GetButtonDown("Jump"))
+                {
+                    // ...set some animation and control parameters...
+                    isJumpButtonHeld = true;
+                    animator.SetBool("IsJumping", true);
+                    isGrounded = false;
+
+                    // ...then add vertical velocity to make their character "jump"!
+                    rbody2D.velocity = new Vector3(rbody2D.velocity.x, jumpStrength);
+                }
+
+                // If the player releases the "Jump" button...
+                if (Input.GetButtonUp("Jump"))
+                {
+                    // ...tell the game that the player is not trying to jump any more.
+                    isJumpButtonHeld = false;
+                }
+            }
+
+            // Our physics update.
+            private void FixedUpdate()
+            {
+                // Check if this object is colliding with any other object at its feet.
+                // If it is...
+                if (Physics2D.OverlapCircle(transform.position, 0.1f, groundLayerMask))
+                {
+                    // ...then tell the game that it should be treated as being "grounded".
+                    isGrounded = true;
+
+                    // If the player is not holding the jump button...
+                    if (!isJumpButtonHeld)
+                    {
+                        // ...then tell the animator to stop playing the jump animation.
+                        animator.SetBool("IsJumping", false);
+                    }
+                }
+                // If we are not colliding...
+                else
+                {
+                    // ...then tell the game that this object is airborne.
+                    isGrounded = false;
+                }
+            }
+
+            /// <summary>
+            /// Set up some initial on-spawn values.
+            /// </summary>
+            private void Initialise()
+            {
+                // Set up some references to our Rigidbody2D, SpriteRenderer, and Animator,
+                // and tell this character what the ground is.
+                if (rbody2D == null) rbody2D = GetComponent<Rigidbody2D>();
+                if (spriteRenderer == null) spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+                if (animator == null) animator = GetComponentInChildren<Animator>();
+                if (groundLayerMask != 8) groundLayerMask = 8;
+
+            }
     }
 }
