@@ -5,42 +5,39 @@ using UnityEngine;
 namespace JohnBundalian
 {
     public class SimpleCharacterController : MonoBehaviour
-    {
+    {  
+       // Rigibody2D Physics or Mechanics value with reference of rbody2D.
         private Rigidbody2D rbody2D;
         private SpriteRenderer spriteRenderer;
         private Animator animator;
 
+        // Refernce Layer group to interact with corresponding layer groups.
+        // bool = true of false variable.
         private LayerMask groundLayerMask;
         private float horizontalMovementValue = 0f;
         private bool isGrounded = false;
         private bool isJumpButtonHeld = false;
 
+        // SerializedField = Able to edit a numerical in unity.
+        // private float speed = increasing the mometum of the characters horizontal mometum.
         [Header("Character Stats")]
         [SerializeField] private float runSpeed = 3f;
-        [SerializeField] private float jumpStrength = 5f;
+        [SerializeField] private float jumpStrength = 3f;
 
-        private void Awake()
+             private void Start()
         {
-            rbody2D = GetComponent<Rigidbody2D>();
-        }
-
-        private void Start()
-        {
-            // Initialise Character.
+            // Initialise our character.
             Initialise();
         }
-        
-            private void Update()
+
+        private void Update()
         {
-            // Horizontal movement value to Playetr 
-            rbody2D.velocity = new Vector2(Input.GetAxis("Horizontal"), rbody2D.velocity.y);
+            // Horizontal movement value to Player 
+            horizontalMovementValue = Input.GetAxisRaw("Horizontal");
 
-            if (Input.GetKey(KeyCode.Space))
-                rbody2D.velocity = new Vector2(rbody2D.velocity.x, runSpeed);
-
-                // Flip our sprite along a vertical 'mirror line' so that it 'faces' the correct direction.
-                // To the left.
-                if (horizontalMovementValue < 0f && spriteRenderer.flipX == true)
+            // Flip our sprite along a vertical 'mirror line' so that it 'faces' the correct direction.
+            // To the left.
+            if (horizontalMovementValue < 0f && spriteRenderer.flipX == true)
                 {
                     spriteRenderer.flipX = false;
                 }
@@ -50,34 +47,35 @@ namespace JohnBundalian
                     spriteRenderer.flipX = true;
                 }
 
-                // Set our animator's Speed parameter so that Alan's run animation plays.
+                //Speed parameter so that Alan's run animation plays.
                 animator.SetFloat("Speed", Mathf.Abs(horizontalMovementValue));
 
                 // Transform this object's position on the X axis (horizontally)
                 // at a rate of "moveSpeed" units every second (by default, 3 units per second).
-                transform.position += Time.deltaTime * runSpeed * new Vector3(horizontalMovementValue, 0);
+                transform.position += Time.deltaTime * runSpeed * new Vector3(horizontalMovementValue, 0f);
 
-                // If the player presses "Jump" (by default, the space bar on the keyboard)...
-                if (isGrounded && Input.GetButtonDown("Jump"))
-                {
-                    // ...set some animation and control parameters...
-                    isJumpButtonHeld = true;
-                    animator.SetBool("IsJumping", true);
-                    isGrounded = false;
+            // if = conditional if pressed
+            // Vector # meaning varribles to impact the equation
+            if (isGrounded && Input.GetButtonDown("Jump"))
+            {
+                // Animation and ocntrol requirements for jump
+                isJumpButtonHeld = true;
+                animator.SetBool("IsJumping", true);
+                isGrounded = false;
 
-                    // ...then add vertical velocity to make their character "jump"!
-                    rbody2D.velocity = new Vector3(rbody2D.velocity.x, jumpStrength);
-                }
-
-                // If the player releases the "Jump" button...
-                if (Input.GetButtonUp("Jump"))
-                {
-                    // ...tell the game that the player is not trying to jump any more.
-                    isJumpButtonHeld = false;
-                }
+                // Vertical velocity to affect character jump
+                rbody2D.velocity = new Vector3(rbody2D.velocity.x, jumpStrength);
             }
 
-            // Our physics update.
+            // the Player rleases the "Jump" button.
+            if (Input.GetButtonUp("Jump"))
+            {
+                // Game looks to see if player is not trying to jump
+                isJumpButtonHeld = false;
+            }
+        }
+
+            // Physics.
             private void FixedUpdate()
             {
                 // Check if this object is colliding with any other object at its feet.
