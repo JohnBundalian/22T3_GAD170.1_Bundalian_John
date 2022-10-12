@@ -9,25 +9,27 @@ namespace JohnBundalian
     /// </summary>
     public class LevellingSystem : MonoBehaviour
     {
+        
+        // Referencing bonus activity later
+        private SimpleCharacterController characterController;
         // TODO XP 1/13 Declare a new variable to track the current amount of XP we have accumulated (our current XP).
-        
+        // Reference Floats
         // TODO XP 2/13 Declare a new variable to track our current Level.
-        
+
         // TODO XP 3/13 Declare a new variable to track the amount of XP required to level-up (our current Level Up Threshold).
-
-
+        
         private void Start()
         {
             // TODO XP 4/13: Set our current level to one.
-
+            // Reference horizontalMovementValue in SimpleCharacterController.
             // TODO XP 5/13: Set our current XP to zero.
 
             // TODO XP 6/13: Set our current XP Threshold to be our level multiplied by our 100.
 
             // TODO XP 7/13: Debug out our starting values of our level, XP and current XP threshold.
-
+            // Reference TemperatureCheck.
             // TODO XP 8/13: Increase the current XP by a random amount between 50 and 100.
-
+            // + To Value
             // TODO XP 9/13: Debug out our current XP.
 
             // TODO XP 10/13: Check if our current XP is more than our threshold.
@@ -41,7 +43,8 @@ namespace JohnBundalian
             // TODO XP Final: Add code comments describing what you hope your code is doing throughout this script.
 
             // TODO XP Bonus: Adjust our character's stats ("runSpeed" and/or "jumpStrength") based on their level. (Hint: You'll need a reference to the SimpleCharacterController script!)
-
+            //characterController.horizontalMovementValue = 0f;
+            // Reference remedial class lesson code above line.
         }
     }
 }
