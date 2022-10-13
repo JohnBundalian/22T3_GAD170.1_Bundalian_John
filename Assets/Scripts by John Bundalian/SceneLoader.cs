@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace WriteYourNameHere
+namespace JohnBundalian
 {
     /// <summary>
     /// This class holds functionality for scene transition and reloading this scene to restart the game.
@@ -11,7 +11,10 @@ namespace WriteYourNameHere
     public class SceneLoader : MonoBehaviour
     {
         // TODO Loader 1/4: Declare a string variable for the name of the scene we want to load, which is this scene. (Write in the scene's name in Unity's Inspector.)
+        public int iLevelToLoad;
+        public string sLevelToLoad;
 
+        public bool useIntergerToLoadLevel = false;
 
         private void LoadScene()
         {
@@ -31,6 +34,28 @@ namespace WriteYourNameHere
 
             // TODO Loader Bonus 2: Add a reference to your second scene (or any scenes you want) so that a second (or more) level can be loaded!
 
+        }
+
+        private void OnTriggerEnter2d(Collider2D collission)
+        {
+            GameObject collisionGameObject = Collision.ameObject;
+
+            if (collisionGameObject.name == "Main Character")
+            {
+                SceneLoader.LoadScene();
+            }
+        }
+
+        void LoadScene()
+        {
+            if (useIntergerToLoadLevel)
+            { 
+                SceneManager.LoadScene(iLevelToLoad);
+            }
+            else
+            {
+                SceneManager.LoadScene(sLevelToLoad)
+            }    
         }
     }
 }
