@@ -11,8 +11,11 @@ namespace JohnBundalian
         private SpriteRenderer spriteRenderer;
         private Animator animator;
 
-        // Refernce Layer group to interact with corresponding layer groups.
-        // bool = true of false variable.
+       
+        /// <summary>
+        /// Refernce Layer group to interact with corresponding layer groups.
+        /// bool = true of false variable.
+        /// </summary>
         private LayerMask groundLayerMask;
         private float horizontalMovementValue = 0f;
         private bool isGrounded = false;
