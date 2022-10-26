@@ -12,6 +12,8 @@ namespace JohnBundalian
         public readonly float Value;
         public readonly StatModType Type;
         public readonly int Order;
+        // Source variable.
+        public readonly object Source;
 
         public StatModifier(float value, StatModType type, int order)
         {
