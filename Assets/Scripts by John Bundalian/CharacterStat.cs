@@ -36,6 +36,18 @@ namespace JohnBundalian
         {
             isDirty = true;
             statModifiers.Add(mod);
+            statModifiers.Sort(CompareModifierOrder);
+        }
+
+        // Allows Modifiers to compare in order so that multipiers of talents and armour are in linear equation.
+        private int CompareModifierOrder(StatModifier a, StatModifier b)
+        {
+            if (a.Order < b.Order)
+                return -1;
+            else if (a.Order > b.Order)
+                return 1;
+            return 0; 
+            // if (a.Order == b.Order).
         }
 
         public bool RemoveModifier(StatModifier mod)
@@ -50,7 +62,16 @@ namespace JohnBundalian
 
             for (int i = 0; i <statModifiers.Count; i++)
             {
-                finalValue += statModifiers[i].Value;
+                StatModifier mod = statModifiers[i];
+
+                if (mod.Type == StatModType.Flat)
+                {
+                    finalValue += mod.Value;
+                }
+                    else if (mod.Type == StatModType.PercentMult)
+                {
+                    finalValue *= 1 + mod.Value;
+                }
             }
 
             // 12.0001f != 12f
